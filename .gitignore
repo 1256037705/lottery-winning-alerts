@@ -1,0 +1,15 @@
+node_modules/
+test-artifacts/
+.next/
+.env
+.env.*
+!.env.example
+src/generated/
+test-results/
+playwright-report/
+*.tsbuildinfo
+backups/
+deploy/archives/
+*.pem
+*.key
+*.crt

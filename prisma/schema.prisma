@@ -1,0 +1,266 @@
+generator client {
+ provider = "prisma-client"
+ output = "../src/generated/prisma"
+}
+datasource db {
+ provider = "postgresql"
+}
+model User {
+ id String @id
+ name String
+ email String @unique
+ emailVerified Boolean @default(false)
+ image String?
+ username String? @unique
+ displayUsername String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ sessions Session[]
+ accounts Account[]
+ roles UserRole[]
+ groups NumberGroup[]
+ audits AuditEvent[]
+}
+model Session {
+ id String @id
+ expiresAt DateTime
+ token String @unique
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ ipAddress String?
+ userAgent String?
+ userId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ @@index([userId])
+}
+model Account {
+ id String @id
+ accountId String
+ providerId String
+ userId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ accessToken String?
+ refreshToken String?
+ idToken String?
+ accessTokenExpiresAt DateTime?
+ refreshTokenExpiresAt DateTime?
+ scope String?
+ password String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@unique([providerId,accountId])
+ @@index([userId])
+}
+model Verification {
+ id String @id
+ identifier String
+ value String
+ expiresAt DateTime
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([identifier])
+}
+model RateLimit {
+ id String @id @default(cuid())
+ key String @unique
+ count Int
+ lastRequest BigInt
+}
+model Role {
+ id String @id @default(cuid())
+ name String @unique
+ permissions RolePermission[]
+ users UserRole[]
+}
+model Permission {
+ id String @id @default(cuid())
+ code String @unique
+ roles RolePermission[]
+}
+model RolePermission {
+ roleId String
+ permissionId String
+ role Role @relation(fields:[roleId],references:[id],onDelete:Cascade)
+ permission Permission @relation(fields:[permissionId],references:[id],onDelete:Cascade)
+ @@id([roleId,permissionId])
+}
+model UserRole {
+ userId String
+ roleId String
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ role Role @relation(fields:[roleId],references:[id],onDelete:Cascade)
+ @@id([userId,roleId])
+}
+enum Lottery {
+ SSQ
+ DLT
+}
+enum GroupKind {
+ FIXED
+ TEMP
+}
+enum GroupStatus {
+ ACTIVE
+ PAUSED
+ ARCHIVED
+}
+enum DrawStatus {
+ PLANNED
+ CONFIRMED
+ CONFLICT
+}
+enum MailStatus {
+ PENDING
+ SENDING
+ SENT
+ FAILED
+ UNCERTAIN
+ CANCELLED
+}
+model NumberGroup {
+ id String @id @default(cuid())
+ name String @db.VarChar(100)
+ lottery Lottery
+ kind GroupKind
+ status GroupStatus @default(ACTIVE)
+ ownerId String
+ owner User @relation(fields:[ownerId],references:[id],onDelete:Restrict)
+ effectiveFrom DateTime @db.Date
+ targetDate DateTime? @db.Date
+ recipients String[]
+ purchased Boolean @default(false)
+ note String @default("") @db.VarChar(500)
+ version Int @default(1)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ archivedAt DateTime?
+ versions GroupVersion[]
+ snapshots Snapshot[]
+ mailJobs MailJob[]
+ @@index([ownerId,kind,status,createdAt])
+ @@index([lottery,status,effectiveFrom])
+}
+model GroupVersion {
+ id String @id @default(cuid())
+ groupId String
+ group NumberGroup @relation(fields:[groupId],references:[id],onDelete:Restrict)
+ version Int
+ tickets Json
+ configuration Json
+ createdAt DateTime @default(now())
+ snapshots Snapshot[]
+ @@unique([groupId,version])
+}
+model Draw {
+ id String @id @default(cuid())
+ lottery Lottery
+ issue String?
+ date DateTime @db.Date
+ scheduledAt DateTime
+ status DrawStatus @default(PLANNED)
+ numbers Json?
+ prizes Json?
+ source String?
+ checkedAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ versions DrawVersion[]
+ snapshots Snapshot[]
+ @@unique([lottery,issue])
+ @@unique([lottery,date])
+ @@index([date,status])
+}
+model DrawVersion {
+ id String @id @default(cuid())
+ drawId String
+ draw Draw @relation(fields:[drawId],references:[id],onDelete:Restrict)
+ checksum String
+ numbers Json
+ prizes Json
+ source String
+ createdAt DateTime @default(now())
+ matches MatchRecord[]
+ @@unique([drawId,checksum])
+}
+model Snapshot {
+ id String @id @default(cuid())
+ groupId String
+ group NumberGroup @relation(fields:[groupId],references:[id],onDelete:Restrict)
+ groupVersionId String
+ groupVersion GroupVersion @relation(fields:[groupVersionId],references:[id],onDelete:Restrict)
+ drawId String
+ draw Draw @relation(fields:[drawId],references:[id],onDelete:Restrict)
+ tickets Json
+ recipients String[]
+ purchased Boolean
+ createdAt DateTime @default(now())
+ matches MatchRecord[]
+ @@unique([groupId,drawId])
+}
+model MatchRecord {
+ id String @id @default(cuid())
+ snapshotId String
+ snapshot Snapshot @relation(fields:[snapshotId],references:[id],onDelete:Restrict)
+ drawVersionId String
+ drawVersion DrawVersion @relation(fields:[drawVersionId],references:[id],onDelete:Restrict)
+ details Json
+ totalAmount Decimal? @db.Decimal(18,2)
+ winning Boolean?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@unique([snapshotId,drawVersionId])
+}
+model MailJob {
+ id String @id @default(cuid())
+ key String @unique
+ groupId String?
+ group NumberGroup? @relation(fields:[groupId],references:[id],onDelete:Restrict)
+ kind String
+ subject String
+ payload Json
+ status MailStatus @default(PENDING)
+ attemptCount Int @default(0)
+ nextAttemptAt DateTime @default(now())
+ leaseUntil DateTime?
+ sentAt DateTime?
+ error String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ attempts MailAttempt[]
+ @@index([status,nextAttemptAt])
+ @@index([groupId,createdAt])
+}
+model MailAttempt {
+ id String @id @default(cuid())
+ jobId String
+ job MailJob @relation(fields:[jobId],references:[id],onDelete:Restrict)
+ number Int
+ status MailStatus
+ error String?
+ startedAt DateTime @default(now())
+ finishedAt DateTime?
+ @@unique([jobId,number])
+}
+model Setting {
+ key String @id
+ value Json
+ updatedAt DateTime @updatedAt
+}
+model AuditEvent {
+ id String @id @default(cuid())
+ actorId String?
+ actor User? @relation(fields:[actorId],references:[id],onDelete:Restrict)
+ action String
+ entityId String?
+ detail Json
+ createdAt DateTime @default(now())
+ @@index([createdAt])
+}
+model JobLease {
+ key String @id
+ expiresAt DateTime
+}
+model ActionThrottle {
+ key String @id
+ lastAt DateTime
+}

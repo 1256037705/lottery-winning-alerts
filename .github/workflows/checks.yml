@@ -1,0 +1,28 @@
+name: Validate
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: lottery_test
+          POSTGRES_PASSWORD: test-only
+          POSTGRES_DB: lottery_test
+        ports: ["55433:5432"]
+        options: --health-cmd "pg_isready -U lottery_test" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+      - run: pnpm test:setup
+      - run: pnpm typecheck && pnpm lint && pnpm test && pnpm test:integration
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e

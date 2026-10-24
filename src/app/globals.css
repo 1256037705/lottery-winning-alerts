@@ -1,0 +1,466 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  color: #1d2939;
+  background: #f5f7fa;
+  font-family: Inter, 'Microsoft YaHei', sans-serif;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+.app-shell {
+  min-height: 100vh;
+}
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 28px 20px;
+  font-weight: 750;
+  font-size: 18px;
+}
+.brand-mark {
+  background: #1677ff;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+.brand small {
+  display: block;
+  color: #8c98aa;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+.shell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  border-bottom: 1px solid #edf0f5;
+  line-height: normal;
+}
+.header-breadcrumb {
+  white-space: nowrap;
+}
+.workspace {
+  max-width: 1680px;
+  width: 100%;
+  margin: auto;
+  padding: 32px;
+}
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.page-heading h1 {
+  font-size: 28px;
+  margin: 0 0 8px;
+  letter-spacing: -1px;
+}
+.muted {
+  color: #66758a;
+}
+.eyebrow {
+  color: #1677ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.metric-value {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+.metric-unit {
+  font-size: 14px;
+  color: #8190a4;
+  margin-left: 8px;
+}
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: #66758a;
+}
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+.ball-line {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 5px 0;
+}
+.ball {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  background: #fff1f0;
+  color: #cf1322;
+  border: 1px solid #ffa39e;
+  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.ball.blue {
+  background: #e6f4ff;
+  border-color: #91caff;
+  color: #0958d9;
+}
+.ball-separator {
+  height: 18px;
+  border-left: 1px solid #d9e1ed;
+  margin: 0 3px;
+}
+/* 多注录入只滚动表单主体，标题与保存操作始终留在视口内。 */
+.ant-modal.number-group-modal {
+  top: 24px;
+  padding-bottom: 0;
+}
+.ant-modal.number-group-modal .ant-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  overflow: hidden;
+}
+.ant-modal.number-group-modal .ant-modal-header,
+.ant-modal.number-group-modal .ant-modal-footer {
+  flex: 0 0 auto;
+}
+.ant-modal.number-group-modal .ant-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: calc(100vh - 190px);
+  max-height: calc(100dvh - 190px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ticket-card {
+  border: 1px solid #dce5f0;
+  border-radius: 14px;
+  padding: 14px 16px 8px;
+  margin-bottom: 12px;
+  background: #fcfdff;
+}
+.ticket-card-header,
+.ticket-zone-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.ticket-card-header {
+  margin-bottom: 10px;
+}
+.ticket-zones {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(112px, 0.42fr);
+  gap: 18px;
+}
+.ticket-zone {
+  min-width: 0;
+}
+.ticket-zone-title {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.ticket-zone-title span {
+  color: #66758a;
+  white-space: nowrap;
+}
+.ticket-zone.main .ticket-zone-title strong {
+  color: #cf1322;
+}
+.ticket-zone.special .ticket-zone-title strong {
+  color: #0958d9;
+}
+.ticket-balls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.ticket-ball-input {
+  width: 43px;
+  height: 43px;
+  padding: 0;
+  border: 1.5px solid;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+  transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
+}
+.ticket-ball-input::placeholder {
+  color: #a8b4c5;
+  font-weight: 400;
+}
+.ticket-ball-input.main {
+  color: #b42318;
+  border-color: #f5aaa4;
+  background: #fff5f4;
+}
+.ticket-ball-input.special {
+  color: #0958d9;
+  border-color: #95c1ff;
+  background: #f1f7ff;
+}
+.ticket-ball-input:focus-visible {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 3px #1677ff30;
+  background: white;
+}
+.ticket-ball-input.invalid,
+.ticket-ball-input.invalid:focus-visible {
+  border-color: #cf1322;
+  box-shadow: 0 0 0 3px #cf132225;
+  background: #fff1f0;
+}
+.ticket-zone-error {
+  min-height: 23px;
+  padding-top: 5px;
+  color: #cf1322;
+  font-size: 11px;
+}
+.calendar-scroll {
+  overflow: auto;
+}
+.draw-calendar {
+  min-width: 920px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid #edf0f5;
+  border-left: 1px solid #edf0f5;
+}
+.calendar-weekday {
+  background: #f7f9fc;
+  text-align: center;
+  padding: 14px;
+  font-weight: 600;
+  border-right: 1px solid #edf0f5;
+}
+.calendar-cell {
+  min-height: 160px;
+  padding: 12px;
+  border-right: 1px solid #edf0f5;
+  border-bottom: 1px solid #edf0f5;
+}
+.calendar-cell.outside {
+  background: #fafbfc;
+  color: #aeb7c6;
+}
+.calendar-day {
+  font-size: 20px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 8px;
+}
+.calendar-day.today {
+  background: #1677ff;
+  color: white;
+  border-radius: 50%;
+}
+.calendar-draw {
+  border-radius: 8px;
+  padding: 6px;
+  background: #f6f8fc;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.calendar-draw .ball {
+  width: 21px;
+  height: 21px;
+  font-size: 10px;
+}
+.calendar-draw .ball-line {
+  gap: 3px;
+}
+.login-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+.login-story {
+  background: linear-gradient(145deg, #0e2147, #174ba6);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12%;
+  position: relative;
+}
+.login-story h1 {
+  font-size: 48px;
+  line-height: 1.3;
+  letter-spacing: -2px;
+}
+.login-story p {
+  color: #bfcee9;
+  font-size: 16px;
+  line-height: 1.9;
+}
+.login-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+.login-card {
+  width: 420px;
+}
+.app-footer {
+  color: #8c98aa;
+  font-size: 12px;
+  margin-top: 32px;
+  padding-top: 18px;
+  border-top: 1px solid #e5eaf1;
+}
+.section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.two-columns {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+}
+.shell-header .mobile-menu {
+  display: none;
+}
+.chart-box {
+  height: 300px;
+  width: 100%;
+}
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 20px;
+  z-index: 9999;
+  background: white;
+  padding: 12px;
+}
+.skip-link:focus {
+  top: 12px;
+}
+@media (max-width: 1100px) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+  .workspace {
+    padding: 24px;
+  }
+}
+@media (max-width: 767px) {
+  .desktop-sider {
+    display: none !important;
+  }
+  .shell-header .mobile-menu {
+    display: inline-flex;
+  }
+  .header-breadcrumb {
+    display: none;
+  }
+  .workspace {
+    padding: 16px;
+  }
+  .shell-header {
+    padding: 0 16px;
+  }
+  .page-heading {
+    align-items: flex-start;
+  }
+  .page-heading h1 {
+    font-size: 23px;
+  }
+  .bento {
+    gap: 12px;
+  }
+  .metric-value {
+    font-size: 23px;
+  }
+  .login-screen {
+    display: block;
+  }
+  .login-story {
+    display: none;
+  }
+  .login-form {
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .ticket-card {
+    padding: 12px;
+  }
+  .ant-modal.number-group-modal {
+    top: 12px;
+  }
+  .ant-modal.number-group-modal .ant-modal-content {
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .ticket-zones {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .ticket-ball-input {
+    width: 40px;
+    height: 40px;
+  }
+  .ticket-balls {
+    gap: 6px;
+  }
+  .table-footer {
+    flex-wrap: wrap;
+  }
+  .filter-field {
+    flex-grow: 1;
+  }
+  .page-heading .muted {
+    font-size: 12px;
+  }
+}

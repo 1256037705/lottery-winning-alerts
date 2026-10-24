@@ -1,0 +1,16 @@
+allowBuilds:
+  '@embedded-postgres/windows-x64': true
+  '@embedded-postgres/linux-x64': true
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@better-auth/core@1.7.12'
+  - '@better-auth/drizzle-adapter@1.7.12'
+  - '@better-auth/kysely-adapter@1.7.12'
+  - '@better-auth/memory-adapter@1.7.12'
+  - '@better-auth/mongo-adapter@1.7.12'
+  - '@better-auth/prisma-adapter@1.7.12'
+  - '@better-auth/telemetry@1.7.12'
+  - better-auth@1.7.12

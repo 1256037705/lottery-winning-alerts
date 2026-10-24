@@ -1,0 +1,10 @@
+{
+  auto_https disable_redirects
+  # 通过 IP 访问时客户端可能不发送 SNI；显式选择局域网地址的证书。
+  default_sni {$LAN_BIND_IP}
+}
+{$SITE_ADDRESS} {
+  tls internal
+  encode zstd gzip
+  reverse_proxy app:3000
+}
